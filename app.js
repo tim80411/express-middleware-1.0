@@ -10,20 +10,19 @@ app.use(function (req, res, next) {
 
   function getFormatTime(timeStampNum) {
     const currentDate = new Date(timeStampNum)
-    const year = currentDate.getFullYear()
-    const month = '0' + (currentDate.getMonth() + 1)
-    const date = '0' + currentDate.getDate()
-    const hours = currentDate.getHours()
-    const minutes = "0" + currentDate.getMinutes()
-    const seconds = "0" + currentDate.getSeconds()
 
-    const formattedTime = `${year}-${month.slice(-2)}-${date.slice(-2)} ${hours}:${minutes.slice(-2)}:${seconds.slice(-2)}`
+    const yearMonthDate = currentDate.toJSON().slice(0, 10)
+    const time = currentDate.toTimeString().slice(0, 8)
+
+    const formattedTime = `${yearMonthDate} ${time}`
 
     return formattedTime
   }
+  
   log = `${getFormatTime(reqTimeStamp)} | ${req.method} from ${req.originalUrl}`
 
   console.log(log)
+
   fs.appendFile('./logs/request.txt', log + '\n', err => {
     if (err) console.error(err)
   })
