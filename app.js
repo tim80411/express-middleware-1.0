@@ -3,25 +3,32 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   const timeStamp = Date.now()
 
   const currentDate = new Date(timeStamp)
   const year = currentDate.getFullYear()
-  const month = '0'+ (currentDate.getMonth() + 1)
+  const month = '0' + (currentDate.getMonth() + 1)
   const date = '0' + currentDate.getDate()
   const hours = currentDate.getHours()
   const minutes = "0" + currentDate.getMinutes()
   const seconds = "0" + currentDate.getSeconds()
 
-  const formattedTime =`${year}-${month.slice(-2)}-${date.slice(-2)} ${hours}:${minutes.slice(-2)}:${seconds.slice(-2)}`
-  
+  const formattedTime = `${year}-${month.slice(-2)}-${date.slice(-2)} ${hours}:${minutes.slice(-2)}:${seconds.slice(-2)}`
+
   console.log(`${formattedTime} | ${req.method} from ${req.originalUrl}`)
   next()
 })
 
 app.get('/', (req, res) => {
-  res.send('列出全部 Todo')
+  res.send(`
+    <a href="/new">GET /new</a><br/>
+    <a href="/something">GET /something</a><br/>
+    <form action="/" method="POST">
+      <button type="submit">POST /</button>
+    </form>
+    `
+  )
 })
 
 app.get('/new', (req, res) => {
