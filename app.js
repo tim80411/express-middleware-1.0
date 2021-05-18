@@ -1,10 +1,12 @@
 // app.js
 const express = require('express')
+const fs = require('fs')
 const app = express()
 const port = 3000
 
 app.use(function (req, res, next) {
   const reqTimeStamp = Date.now()
+  let log = ''
 
   function getFormatTime(timeStampNum) {
     const currentDate = new Date(timeStampNum)
@@ -19,13 +21,23 @@ app.use(function (req, res, next) {
 
     return formattedTime
   }
-  console.log(`${getFormatTime(reqTimeStamp)} | ${req.method} from ${req.originalUrl}`)
+  log = `${getFormatTime(reqTimeStamp)} | ${req.method} from ${req.originalUrl}`
+
+  console.log(log)
+  fs.appendFile('./logs/request.txt', log + '\n', err => {
+    if (err) console.error(err)
+  })
 
   res.on('close', () => {
     const resTimeStamp = Date.now()
     const timePass = resTimeStamp - reqTimeStamp
 
-    console.log(`${getFormatTime(resTimeStamp)} | ${req.method} from ${req.originalUrl} | total time: ${timePass} ms`)
+    log = `${getFormatTime(resTimeStamp)} | ${req.method} from ${req.originalUrl} | total time: ${timePass} ms`
+    console.log(log)
+
+    fs.appendFile('./logs/request.txt', log + '\n', err => {
+      if (err) console.error(err)
+    })
   })
   next()
 })
